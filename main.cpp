@@ -7,6 +7,7 @@
 #include <chrono>
 #include <fstream>
 #include <algorithm>
+#include <cctype>
 
 using namespace std;
 using namespace std::chrono;
@@ -45,6 +46,7 @@ const vector<WordData> daftarKataClue = {
     {"pegunungan", "Barisan bukit yang tingginya mencapai ribuan meter.", "Umum"}
 };
 
+void bersihkanKonsol();
 void tampilkanMenu();
 int ambilPilihan();
 void mulaiGame(); 
@@ -56,39 +58,51 @@ void simpanSkor(const string& nama, int skor);
 void tampilkanPeringkat(); 
 bool bandingkanSkor(const ScoreEntry& a, const ScoreEntry& b); 
 
+void bersihkanKonsol(){
+  #ifdef_WIN32
+        system("cls"); 
+    #else
+        system("clear");
+    #endif
+}
+
 int main() {
     srand(time(0)); 
     int pilihan;
 
     do {
+        bersihkanKonsol();
+        
         tampilkanMenu();
         pilihan = ambilPilihan();
 
+        if (pilihan !=4) {
         switch (pilihan) {
             case 1:
                 mulaiGame();
                 break;
             case 2:
+                bersihkanKonsol();
                 tampilkanBantuan();
                 break;
             case 3:
+                bersihkanKonsol();
                 tampilkanTentang();
                 break;
             case 5: 
+                bersihkanKonsol();
                 tampilkanPeringkat();
-                break;
-            case 4:
-                cout << "Terima kasih telah bermain! Sampai jumpa.\n";
                 break;
             default:
                 cout << "Pilihan tidak valid. Silakan masukkan angka 1-5.\n";
                 break;
-        }
+            }
 
-        if (pilihan != 4) {
             cout << "\nTekan ENTER untuk melanjutkan...";
             cin.ignore(numeric_limits<streamsize>::max(), '\n');
             cin.get();
+        } else {
+            cout << "Terima kasih telah bermain! Sampai jumpa.\n";
         }
 
     } while (pilihan != 4);
@@ -116,7 +130,7 @@ int ambilPilihan() {
     int pilihan;
     cin >> pilihan;
 
-    if (cin.fail()) {
+    if (cin >> ws && cin.fail()) {
         cin.clear(); 
         cin.ignore(numeric_limits<streamsize>::max(), '\n');
         return 0;
